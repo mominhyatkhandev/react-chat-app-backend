@@ -8,7 +8,6 @@ require('dotenv').config();
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./users");
 
 const router = require("./router");
-const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +18,7 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 
-app.use(cors());
+app.use(cors({corsOptions}));
 app.use(router);
 
 const io = new Server(server, {
@@ -69,7 +68,7 @@ io.on("connect", (socket) => {
 
     if (user) {
       io.to(user.room).emit("message", {
-        user: "Admin",
+        user: "admin",
         text: `${user.name} has left.`,
       });
       io.to(user.room).emit("roomData", {
